@@ -1,48 +1,56 @@
 .data 
-initMenu: .asciiz "Digite \"C\" para o menu da calculadora e \"M\" para o menu das memórias\n"
-menuC:    .asciiz "\nDigite o número da opção desejada: \n 1-> adição\n 2-> subtração\n 3->divisao 4->multiplicação 5->potenciacao 6->raiz quadradada 7-> Tabuada 8->Fatorial 9->Fibbonaci\n"
-menuM:    .asciiz "\nMenu memória \n"
+_menuI: .asciiz "\n\nDigite \"C\" para o menu da calculadora e \"M\" para o menu das memórias\n"
+_menuC:    .asciiz "\nDigite o número da opção desejada: \n 1-> Adição 2-> Subtração\n 3->Divisao 4->Multiplicação\n 5->Potenciacao 6->Raiz quadradada\n 7-> Tabuada 8->Fatorial\n 9->Fibbonaci\n"
+_menuM:    .asciiz "\nMenu memória \n"
 
 .text
-.globl main
+.globl _InitMenu
 
-main:
+_InitMenu:
 	#Print init Menu
 	li $v0, 4
-	la $a0, initMenu
+	la $a0, _menuI
 	syscall
 	
-	#Read Option (char) from init Menu
+	#Read Option (char) from init Menu and put to t0
 	li $v0, 12
 	syscall
-	
-	#Put init Menus' option to t0
 	move $t0, $v0
 
-	
-	beq $t0, 'C', calcMenu
-	beq $t0, 'M', memMenu
+	beq $t0, 'C', _CalcMenu
+	beq $t0, 'M', _MemMenu
 	
 	#exit program
 	li $v0, 10
 	syscall
 			
-calcMenu:
+_CalcMenu:
 	#print calculator Menu
 	li $v0, 4
-	la $a0, menuC
+	la $a0, _menuC
 	syscall
 	
+	#Read Option (char) from calc Menu and put to t0
+	li $v0, 12
+	syscall
+	move $t0, $v0
+	
+	beq $t0, '1', _AddFunc
+	beq $t0, '2', _SubFunc
+	beq $t0, '3', _DivFunc
+	beq $t0, '4', _MulFunc
+	
+	
 	#volta para o menu inicial
-	j main
+	j _InitMenu
 	
 	
-memMenu:
+_MemMenu:
 	#print memory Menu
 	li $v0, 4
-	la $a0, menuM
+	la $a0, _menuM
 	syscall
 	
 	#volta para o menu inicial
-	j main
+	j _InitMenu
 	
