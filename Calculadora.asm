@@ -39,6 +39,7 @@ _CalcMenu:
 	beq $t0, '2', _SubFunc
 	beq $t0, '3', _DivFunc
 	beq $t0, '4', _MulFunc
+	beq $t0, '8', _FatFunc
 	
 	
 	#volta para o menu inicial
