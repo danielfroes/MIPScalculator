@@ -20,9 +20,7 @@ _InitMenu:
 	beq $t0, 'C', _CalcMenu
 	beq $t0, 'M', _MemMenu
 	
-	#exit program
-	li $v0, 10
-	syscall
+	j _InitMenu
 			
 _CalcMenu:
 	#print calculator Menu
@@ -39,6 +37,7 @@ _CalcMenu:
 	beq $t0, '2', _SubFunc
 	beq $t0, '3', _DivFunc
 	beq $t0, '4', _MulFunc
+	beq $t0, '6', _SqrtFunc
 	beq $t0, '8', _FatFunc
 	
 	
