@@ -144,6 +144,10 @@ _fatResult:
 	jal _PrintResult
 	jal _StoreResult #sotre $a0 in/on memory
 	j _InitMenu
+	
+_fatEnd:
+	j _InitMenu
+
 ######################################################
 _potFunc:
 	jal _ReadDoubleOperand #$v0 -> A; $v1 -> B ; A^B
@@ -235,11 +239,6 @@ _printMulLine:
 	
 _tabEnd:
 	j _InitMenu 
-
-######################################################
-
-_fatEnd:
-	j _InitMenu
 	
 ###############################################################################################
 _ReadSingleOperand:
