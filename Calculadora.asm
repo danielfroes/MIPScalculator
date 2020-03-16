@@ -1,7 +1,7 @@
 .data 
-_menuI: .asciiz "\n\nDigite \"C\" para o menu da calculadora e \"M\" para o menu das memórias\n"
-_menuC:    .asciiz "\nDigite o número da opção desejada: \n 1-> Adição 2-> Subtração\n 3->Divisao 4->Multiplicação\n 5->Potenciacao 6->Raiz quadradada\n 7-> Tabuada 8->Fatorial\n 9->Fibbonaci\n"
-_menuM:    .asciiz "\nMenu memória \n"
+_menuI: .asciiz "\n\nDigite \"C\" para o menu da calculadora e \"M\" para o menu das memï¿½rias\n"
+_menuC:    .asciiz "\nDigite o nï¿½mero da opï¿½ï¿½o desejada: \n 1-> Adiï¿½ï¿½o 2-> Subtraï¿½ï¿½o\n 3->Divisao 4->Multiplicaï¿½ï¿½o\n 5->Potenciacao 6->Raiz quadradada\n 7-> Tabuada 8->Fatorial\n 9->Fibbonaci\n"
+_menuM:    .asciiz "\nMenu memï¿½ria \n"
 
 .text
 .globl _InitMenu
@@ -39,9 +39,11 @@ _CalcMenu:
 	beq $t0, '2', _SubFunc
 	beq $t0, '3', _DivFunc
 	beq $t0, '4', _MulFunc
-	
+	beq $t0, '5', _potFunc
+	beq $t0, '7', _tabFunc	
 	
 	#volta para o menu inicial
+	# eu acho que o cÃ³digo nunca chega aqui, pois das funÃ§Ãµes ele pula direto para _InitMenu
 	j _InitMenu
 	
 	
