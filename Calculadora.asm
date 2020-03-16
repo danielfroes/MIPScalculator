@@ -1,7 +1,7 @@
 .data 
 _menuI: .asciiz "\n\nDigite \"C\" para o menu da calculadora e \"M\" para o menu das mem�rias\n"
 _menuC:    .asciiz "\nDigite o n�mero da op��o desejada: \n 1-> Adi��o 2-> Subtra��o\n 3->Divisao 4->Multiplica��o\n 5->Potenciacao 6->Raiz quadradada\n 7-> Tabuada 8->Fatorial\n 9->Fibbonaci\n"
-_menuM:    .asciiz "\nMenu mem�ria \n"
+_menuM:    .asciiz "\nMenu mem�ria \n Digite '1', '2' ou '3'\n"
 
 .text
 .globl _InitMenu
@@ -52,6 +52,30 @@ _MemMenu:
 	li $v0, 4
 	la $a0, _menuM
 	syscall
+	
+	#Read Option (char) from calc Menu and put to t0
+	li $v0, 12
+	syscall
+	move $t0, $v0
+	
+	beq $t0, '1', _M1
+	beq $t0, '2', _M2
+	beq $t0, '3', _M3
+	
+_M1:
+	li, $a0, 0
+	j _MEnd
+
+_M2:
+	li, $a0, 4
+	j _MEnd
+	
+_M3:
+	li, $a0, 8
+	j _MEnd
+	
+_MEnd:
+	jal _PrintMem
 	
 	#volta para o menu inicial
 	j _InitMenu

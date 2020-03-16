@@ -27,7 +27,7 @@ _AddFunc:
 	add $a0, $v0, $v1
 	
 	jal _PrintResult
-	
+	jal _StoreResult #sotre $a0 in/on memory
 	j _InitMenu
 ###############################################################################################	
 _SubFunc:
@@ -36,7 +36,7 @@ _SubFunc:
 	sub $a0, $v0, $v1
 	
 	jal _PrintResult
-	
+	jal _StoreResult #sotre $a0 in/on memory
 	j _InitMenu
 	
 ###############################################################################################
@@ -48,7 +48,7 @@ _DivFunc:
 	div $a0, $v0, $v1
 	
 	jal _PrintResult
-	
+	jal _StoreResult #sotre $a0 in/on memory
 	j _divEnd
 	
 _divError:
@@ -66,6 +66,7 @@ _MulFunc:
 	mul  $a0, $v0, $v1
 	
 	jal _PrintResult
+	jal _StoreResult #sotre $a0 in/on memory
 	
 	j _InitMenu
 ###############################################################################################
@@ -106,6 +107,7 @@ _sqrtError:
 _sqrtResult:	
 	move $a0, $t2 #put the result as a argument
 	jal _PrintResult
+	jal _StoreResult #sotre $a0 in/on memory
 
 _sqrtEnd:
 	j _InitMenu
@@ -140,6 +142,7 @@ _fatError:
 _fatResult:
 	move $a0, $t1  #moving result to argument
 	jal _PrintResult
+	jal _StoreResult #sotre $a0 in/on memory
 	j _InitMenu
 ######################################################
 _potFunc:
@@ -164,6 +167,7 @@ _potLoop:
 _potResult:
 	move $a0, $t3
 	jal _PrintResult
+	jal _StoreResult #sotre $a0 in/on memory
 	
 _potEnd:
 	j _InitMenu
