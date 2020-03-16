@@ -2,6 +2,7 @@
 
 offsetMem: .word 0 #Alocando um espaço na mem com a tag offsetMem e colocando nesse espaço o valor 0
 memStr: .asciiz "\nO resultado e: "
+memErrStr: .asciiz "\ERRO! Essa memoria esta vazia "
 
 .text
 .globl _StoreResult
@@ -24,6 +25,11 @@ _StoreResult:
 	
 #arg esta em $a0
 _PrintMem:
+	lw $t0, offsetMem
+	
+	ble $t0, $a0,  _memError
+	
+
 	#load mem 
 	add $sp, $sp, $a0 #move $sp to offset
 	lw $t0, 0($sp)
@@ -36,7 +42,15 @@ _PrintMem:
 	li $v0, 1
 	move $a0, $t0
 	syscall
+
+	j _memEnd
 	
+_memError:
+	li $v0, 4
+	la $a0, memErrStr
+	syscall
+	
+	j _memEnd
+	
+_memEnd:
 	jr $ra
-	
-	
