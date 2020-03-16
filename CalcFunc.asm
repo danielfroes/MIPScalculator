@@ -140,6 +140,7 @@ _fatError:
 _fatResult:
 	move $a0, $t1  #moving result to argument
 	jal _PrintResult
+	j _InitMenu
 ######################################################
 _potFunc:
 	jal _ReadDoubleOperand #$v0 -> A; $v1 -> B ; A^B
