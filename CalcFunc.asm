@@ -20,6 +20,7 @@ _newLine: .asciiz "\n"
 .globl _FatFunc
 .globl _potFunc
 .globl _tabFunc
+.globl _fibFunc
 ###############################################################################################
 _AddFunc:
 	jal _ReadDoubleOperand
@@ -241,6 +242,46 @@ _tabEnd:
 	j _InitMenu 
 	
 ###############################################################################################
+_fibFunc:
+	jal _ReadSingleOperand
+	
+	move $t0, $v0   #t0 -> n
+	li $t1, 1
+	li $t2, 1
+	move $t3, $zero #t3 -> acumulator (answer)
+	li $t4, 2 #cnt - the beginning point is the 3rd fibonacci number
+	
+	beq $t0, 1, _fibBaseCases
+	beq $t0, 2, _fibBaseCases
+	j _fibLoop
+	
+_fibLoop:
+	beq $t4, $t0, _fibResult
+	
+	add $t3, $t1, $t2 #t3 = t1 + t2
+	
+	#shift
+	move $t1, $t2
+	move $t2, $t3
+	
+	addi $t4, $t4, 1 #cnt++
+	
+	j _fibLoop
+	
+_fibBaseCases:
+	li $a0, 1
+	j _fibResult
+	
+_fibResult:
+	move $a0, $t3
+	jal _PrintResult
+	jal _StoreResult #store $a0 in/on memory
+	j _fibEnd
+
+_fibEnd:
+	j _InitMenu 
+	
+###############################################################################################
 _ReadSingleOperand:
 	#print
 	li $v0, 4
@@ -252,7 +293,7 @@ _ReadSingleOperand:
 	syscall
 	
 	#return operand in $v0
-	jr $ra
+	jr $ra	
 ###############################################################################################
 _ReadDoubleOperand:
  	#print

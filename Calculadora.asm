@@ -1,7 +1,9 @@
 .data 
 _menuI: .asciiz "\n\nDigite \"C\" para o menu da calculadora e \"M\" para o menu das mem�rias\n"
 _menuC:    .asciiz "\nDigite o n�mero da op��o desejada: \n 1-> Adi��o 2-> Subtra��o\n 3->Divisao 4->Multiplica��o\n 5->Potenciacao 6->Raiz quadradada\n 7-> Tabuada 8->Fatorial\n 9->Fibbonaci\n"
-_menuM:    .asciiz "\nMenu mem�ria \n Digite '1', '2' ou '3'\n"
+_menuM:    .asciiz "\nMenu mem�ria \n Digite 'M1', 'M2' ou 'M3'\n"
+_endCalc: .asciiz "\nEncerrando programa..."
+_debug: .asciiz "\ndebug\n"
 
 _memOpt: .space 4 #Allocate 4 bytes (including \0)
 
@@ -43,12 +45,26 @@ _CalcMenu:
 	beq $t0, 6, _SqrtFunc
 	beq $t0, 7, _tabFunc
 	beq $t0, 8, _FatFunc
+	beq $t0, 9, _fibFunc
 	
-	#volta para o menu inicial
-	# eu acho que o código nunca chega aqui, pois das funções ele pula direto para _InitMenu
-	j _InitMenu
+	#print calculator Menu
+	li $v0, 4
+	la $a0, _debug
+	syscall
 	
+	j _EndCalc
 	
+_EndCalc:
+	#Print ending message
+	li $v0, 4
+	la $a0, _endCalc
+	syscall
+	
+	#Finish program
+	li $v0, 10
+	syscall
+	
+###################MEMORY FUNCTIONS#######################
 _MemMenu:
 	#print memory Menu
 	li $v0, 4
