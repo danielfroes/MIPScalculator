@@ -2,13 +2,17 @@
 _readSingle: .asciiz "\n Digite o valor do operando\n"
 _readA:  .asciiz "\n Digite o valor do primeiro operando\n"
 _readB:  .asciiz "\n Digite o valor do segundo operando\n"
-_result: .asciiz "\n Resultado da opera��o: "
-_divErrorMsg: .asciiz "\n ERRO: divis�o por 0\n"
+_result: .asciiz "\n Resultado da operacao: "
+_divErrorMsg: .asciiz "\n ERRO: divisao por 0, refaca o procedimento\n"
 _sqrtErrorMsg: .asciiz "\n ERRO: raiz quadrada de n negativo \n"
 _fatErrorMsg: .asciiz  "\n ERRO: fatorial de n negativo \n"
+_fibErrorMsg: .asciiz  "\n ERRO: o numero da sequencia precisa ser maior que 0 \n"
+_potErrorMsg: .asciiz "\n ERRO: o expoente precisa ser positivo, refaca o procedimento"
+_beginningFibSeq: .asciiz "\n1 "
 _mulStr1: .asciiz " X "
 _mulStr2: .asciiz " = "
 _newLine: .asciiz "\n"
+_space: .asciiz " "
 
 .text
 
@@ -28,7 +32,7 @@ _AddFunc:
 	add $a0, $v0, $v1
 	
 	jal _PrintResult
-	jal _StoreResult #sotre $a0 in/on memory
+	jal _StoreResult #store $a0 in memory
 	j _InitMenu
 ###############################################################################################	
 _SubFunc:
@@ -37,7 +41,7 @@ _SubFunc:
 	sub $a0, $v0, $v1
 	
 	jal _PrintResult
-	jal _StoreResult #sotre $a0 in/on memory
+	jal _StoreResult #store $a0 in memory
 	j _InitMenu
 	
 ###############################################################################################
@@ -49,13 +53,16 @@ _DivFunc:
 	div $a0, $v0, $v1
 	
 	jal _PrintResult
-	jal _StoreResult #sotre $a0 in/on memory
+	jal _StoreResult #store $a0 in memory
 	j _divEnd
 	
 _divError:
+	#print err message
 	li $v0, 4
 	la $a0, _divErrorMsg
 	syscall
+	
+	j _DivFunc
 	
 _divEnd:
 	j _InitMenu
@@ -67,7 +74,7 @@ _MulFunc:
 	mul  $a0, $v0, $v1
 	
 	jal _PrintResult
-	jal _StoreResult #sotre $a0 in/on memory
+	jal _StoreResult #store $a0 in/on memory
 	
 	j _InitMenu
 ###############################################################################################
@@ -108,7 +115,7 @@ _sqrtError:
 _sqrtResult:	
 	move $a0, $t2 #put the result as a argument
 	jal _PrintResult
-	jal _StoreResult #sotre $a0 in/on memory
+	jal _StoreResult #store $a0 in/on memory
 
 _sqrtEnd:
 	j _InitMenu
@@ -143,7 +150,7 @@ _fatError:
 _fatResult:
 	move $a0, $t1  #moving result to argument
 	jal _PrintResult
-	jal _StoreResult #sotre $a0 in/on memory
+	jal _StoreResult #store $a0 in/on memory
 	j _InitMenu
 	
 _fatEnd:
@@ -153,12 +160,12 @@ _fatEnd:
 _potFunc:
 	jal _ReadDoubleOperand #$v0 -> A; $v1 -> B ; A^B
 	
-	#fazer com expoente negativo?
+	blt $v1, $zero, _potError #fatorial of negative number
 	
 	move $t0, $v0 #t0 -> A; reference to multiply
 	move $t1, $v1 #t1 -> B; reference to stop
 	move $t2, $zero #t2 -> cnt
-	li $t3, 1 #t3 -> acumulator (answer) [existe acumulator em ingles? rsrs
+	li $t3, 1 #t3 -> acumulator (answer)
 	
 _potLoop:
 	beq $t2, $t1, _potResult #cnt == B
@@ -169,10 +176,17 @@ _potLoop:
 	
 	j _potLoop
 	
+_potError:
+	li $v0, 4
+	la $a0, _potErrorMsg
+	syscall
+	
+	j _potFunc
+	
 _potResult:
 	move $a0, $t3
 	jal _PrintResult
-	jal _StoreResult #sotre $a0 in/on memory
+	jal _StoreResult #store $a0 in/on memory
 	
 _potEnd:
 	j _InitMenu
@@ -182,6 +196,7 @@ _potEnd:
 _tabFunc:
 	jal _ReadSingleOperand
 	
+	#The format is gonna be
 	# 2 x 3 = 6
 	# 2 x 4 = 8
 	# 2 x 5 = 10
@@ -198,7 +213,7 @@ _tabLoop:
 	addi $t2, $t2, 1 #cnt++
 	mul $t3, $t0, $t2 #t3 -> result
 	
-	#printar as criancas
+	#print one line
 	jal _printMulLine
 	
 	j _tabLoop
@@ -243,22 +258,34 @@ _tabEnd:
 	
 ###############################################################################################
 _fibFunc:
+	#It'll be used 3 registers to calculate the sequence: t1, t2 and t3
+	#Each loop does the following: (1)t3 = t1+t2 ; (2)t1=t2 and t2=t3
+	#The second step is a shift of the values. The next loop will calculate the next number based on t1 and t2
+	
+	
 	jal _ReadSingleOperand
 	
-	move $t0, $v0   #t0 -> n
-	li $t1, 1
-	li $t2, 1
-	move $t3, $zero #t3 -> acumulator (answer)
-	li $t4, 2 #cnt - the beginning point is the 3rd fibonacci number
+	blt $v0, 1, _fibError
 	
-	beq $t0, 1, _fibBaseCases
-	beq $t0, 2, _fibBaseCases
+	move $t0, $v0   #t0 -> n
+	li $t1, 0
+	li $t2, 1
+	move $t3, $zero #t3 -> acumulator
+	li $t4, 1 #cnt - the beginning point is the 2nd fibonacci sequence number
+	
+	#print the beginning of the sequence --> "1  "
+	li $v0, 4
+	la $a0, _beginningFibSeq
+	syscall 
+	
 	j _fibLoop
 	
 _fibLoop:
-	beq $t4, $t0, _fibResult
+	beq $t4, $t0, _fibEnd #Final condition
 	
 	add $t3, $t1, $t2 #t3 = t1 + t2
+	
+	jal _printFibSeq #print the number with spaces --> " x "
 	
 	#shift
 	move $t1, $t2
@@ -268,17 +295,41 @@ _fibLoop:
 	
 	j _fibLoop
 	
-_fibBaseCases:
-	li $a0, 1
-	j _fibResult
+_printFibSeq:
+	#print " "
+	li $v0, 4
+	la $a0, _space
+	syscall 
+	
+	#print n
+	li $v0, 1
+	move $a0, $t3
+	syscall
+	
+	#print " "
+	li $v0, 4
+	la $a0, _space
+	syscall 
+		
+	jr $ra
+	
+_fibError:
+	#if the number is 0 or < 0
+	li $v0, 4
+	la $a0, _fibErrorMsg
+	syscall
+	
+	j _fatEnd	
 	
 _fibResult:
 	move $a0, $t3
 	jal _PrintResult
-	jal _StoreResult #store $a0 in/on memory
+	jal _StoreResult #store $a0 on memory
 	j _fibEnd
 
 _fibEnd:
+	move $a0, $t3
+	jal _StoreResult #store the last fibonacci number on memory
 	j _InitMenu 
 	
 ###############################################################################################

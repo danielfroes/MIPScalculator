@@ -1,6 +1,6 @@
 .data
 
-offsetMem: .word 0 #Alocando um espaço na mem com a tag offsetMem e colocando nesse espaço o valor 0
+offsetMem: .word 0 #Allocating space on memory with tag offsetMem and putting 0 into this space
 memStr: .asciiz "\nO resultado e: "
 memErrStr: .asciiz "\ERRO! Essa memoria esta vazia "
 
@@ -9,21 +9,19 @@ memErrStr: .asciiz "\ERRO! Essa memoria esta vazia "
 .globl _PrintMem
 
 
-#arg esta em $a0
+#arg is in $a0
 _StoreResult:
 	#cnt++
 	lw $t0, offsetMem
 	addi $t0, $t0, 4
 	sw $t0, offsetMem
 	
-	#considerar os casos em q nao ha numeros na mem escolhida
-	
 	addi $sp, $sp, -4
 	sw $a0, 0($sp)
 		
 	jr $ra
 	
-#arg esta em $a0
+#arg is in $a0
 _PrintMem:
 	lw $t0, offsetMem
 	
@@ -33,12 +31,14 @@ _PrintMem:
 	#load mem 
 	add $sp, $sp, $a0 #move $sp to offset
 	lw $t0, 0($sp)
-	sub $sp, $sp, $a0 #there and back again
+	sub $sp, $sp, $a0 #return to initial point
 	
+	#print result string
 	li $v0, 4
 	la $a0, memStr
 	syscall
 	
+	#print integer result
 	li $v0, 1
 	move $a0, $t0
 	syscall
@@ -46,6 +46,7 @@ _PrintMem:
 	j _memEnd
 	
 _memError:
+	#print error message
 	li $v0, 4
 	la $a0, memErrStr
 	syscall

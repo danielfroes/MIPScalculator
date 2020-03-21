@@ -1,7 +1,9 @@
+# Comentar e identar tudo
+
 .data 
-_menuI: .asciiz "\n\nDigite \"C\" para o menu da calculadora e \"M\" para o menu das mem�rias\n"
-_menuC:    .asciiz "\nDigite o n�mero da op��o desejada: \n 1-> Adi��o 2-> Subtra��o\n 3->Divisao 4->Multiplica��o\n 5->Potenciacao 6->Raiz quadradada\n 7-> Tabuada 8->Fatorial\n 9->Fibbonaci\n"
-_menuM:    .asciiz "\nMenu mem�ria \n Digite 'M1', 'M2' ou 'M3'\n"
+_menuI: .asciiz "\n\nDigite \"C\" para o menu da calculadora e \"M\" para o menu das memorias\n"
+_menuC:    .asciiz "\nDigite o numero da opcao desejada: \n 1-> Adicao 2-> Subtracao\n 3->Divisao 4->Multiplicacao\n 5->Potenciacao 6->Raiz quadradada\n 7-> Tabuada 8->Fatorial\n 9->Fibbonaci\n"
+_menuM:    .asciiz "\nMenu memoria \n Digite 'M1', 'M2' ou 'M3'\n"
 _endCalc: .asciiz "\nEncerrando programa..."
 _debug: .asciiz "\ndebug\n"
 
@@ -24,7 +26,7 @@ _InitMenu:
 	beq $t0, 'C', _CalcMenu
 	beq $t0, 'M', _MemMenu
 	
-	j _InitMenu
+	j _EndCalc
 			
 _CalcMenu:
 	#print calculator Menu
@@ -32,7 +34,7 @@ _CalcMenu:
 	la $a0, _menuC
 	syscall
 	
-	#Read Option (char) from calc Menu and put to t0
+	#Read Option (int) from calc Menu and put to t0
 	li $v0, 5
 	syscall
 	move $t0, $v0
@@ -46,11 +48,6 @@ _CalcMenu:
 	beq $t0, 7, _tabFunc
 	beq $t0, 8, _FatFunc
 	beq $t0, 9, _fibFunc
-	
-	#print calculator Menu
-	li $v0, 4
-	la $a0, _debug
-	syscall
 	
 	j _EndCalc
 	
@@ -71,13 +68,13 @@ _MemMenu:
 	la $a0, _menuM
 	syscall
 	
-	#Read Option (char) from calc Menu and put to t0
+	#Read Option (string) from calc Menu
 	li $v0, 8
 	la $a0,  _memOpt
-	li $a1, 4 #4 bytes
+	li $a1, 4 #4 chars to read "M - x - \0 - \n"
 	syscall
 	
-	move $t1, $a0 #protect reference
+	move $t1, $a0 #protect address of input buffer
 	
 	#compare 1st byte
 	lb $t0, 0($t1)
@@ -92,23 +89,28 @@ _MemMenu:
 	beq $t0, '3', _M3
 	
 	j _MEnd
+	
 _M1:
+	#show M1 result
 	li, $a0, 0
 	j _MResult
 
 _M2:
+	#show M2 result
 	li, $a0, 4
 	j _MResult
 	
 _M3:
+	#show M3 result
 	li, $a0, 8
 	j _MResult
 	
 _MResult:
+	#use $a0 to print the right memory
 	jal _PrintMem
-	j _MEnd
+	j _MemMenu
 	
 _MEnd:
-	#volta para o menu inicial
+	#return to initial menu
 	j _InitMenu
 	
