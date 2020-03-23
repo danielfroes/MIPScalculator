@@ -1,0 +1,95 @@
+Abra o MARS >> Ctrl+O para abrir os arquivos
+Abra os 3 arquivos: Calculadora.asm; CalcFunc.asm; MemFunc.asm
+Agora clique na aba do arquivo Calculadora.asm >> Compilar (F3) >> Executar (F5)
+
+Basta seguir a sequencia de cada linha (a quebra de linha é um ENTER)
+Obs.: As letras do caso teste são "case sensitive"
+
+SOMA (2+3=5)
+C
+1
+2
+3
+M
+M1
+M2
+L //Voltar para menu inicial
+
+SUBTRAÇÃO (2-(-3)=5)
+C
+2
+2
+-3
+M
+M1
+M2
+M3
+K //Voltar para menu inicial
+
+DIVISÃO (24/3=8  ; 5/0=Erro)
+C
+3
+24
+3
+C
+5
+0
+4
+2
+
+MULTIPLICAÇÃO (4X10=40)
+C 
+4
+10
+4
+
+POTENCIAÇÃO (2^10=1024   ; 5^-2=Erro   ; 2^3=8)
+C
+5
+2
+10
+C
+5
+3
+-2
+2
+3
+
+RAIZ QUADRADA (V25=5   ; V26=5 (raiz aproximada)  ; V-16=Erro)
+6
+25
+C
+26
+C
+-16
+
+
+TABUADA
+C
+7
+3
+C
+7
+-2
+
+
+FATORIAL (5!=120   ;  -3!=Erro)
+C
+8
+5
+C
+8
+-3
+
+
+SEQUENCIA FIBONACCI (10 -> 1 1 2 3 5 8 13 21 34 55  ; -2 -> Erro)
+C
+9
+5
+M
+M1 //O ultimo valor da sequencia é armazenado
+k  //Voltar para o menu inicial
+9
+-2
+l //Encerrar o programa
+
