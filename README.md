@@ -1,7 +1,7 @@
 Basic calculator implemented in assembly MIPS.
 To do:
-- [x] Implement all function
+- [x] Implement all functions
 - [x] Comment and indent code
-- [ ] Make test cases
+- [x] Make test cases
 
 
