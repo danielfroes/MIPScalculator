@@ -1,7 +1,7 @@
 .data
-_readSingle: .asciiz "\n Digite o valor do operando\n"
-_readA:  .asciiz "\n Digite o valor do primeiro operando\n"
-_readB:  .asciiz "\n Digite o valor do segundo operando\n"
+_readSingle: .asciiz "\n Digite o valor do operando: "
+_readA:  .asciiz "\n Digite o valor do primeiro operando: "
+_readB:  .asciiz "\n Digite o valor do segundo operando: "
 _result: .asciiz "\n Resultado da operacao: "
 _divErrorMsg: .asciiz "\n ERRO: divisao por 0, refaca o procedimento\n"
 _sqrtErrorMsg: .asciiz "\n ERRO: raiz quadrada de n negativo \n"
